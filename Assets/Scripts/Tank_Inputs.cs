@@ -61,7 +61,7 @@ public class Tank_Inputs : MonoBehaviour
         float axisToMoveX= Input.GetAxis("RightStickX");
         float axisToMoveY = Input.GetAxis("RightStickY");
         
-        Debug.Log(axisToMoveX+" "+axisToMoveY);
+        
         
        
         

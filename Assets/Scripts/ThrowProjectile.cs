@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections;
+using UnityEngine;
+using UnityEngine.Pool;
+
 
 public class ThrowProjectile : MonoBehaviour
 {
@@ -19,6 +23,25 @@ public class ThrowProjectile : MonoBehaviour
     // Time at which we’re next allowed to shoot
     private float nextTimeToFire = 0f;
 
+   
+    private ObjectPool<Rigidbody> pool;
+
+
+    private void Awake()
+    {
+        pool = new ObjectPool<Rigidbody>(
+            createFunc: CreateItem,
+            actionOnGet: OnGet,
+            actionOnRelease: OnRelease,
+            actionOnDestroy: OnDestroyItem,
+            collectionCheck: true,
+            defaultCapacity: 10,
+            maxSize: 50
+        );
+        
+    }
+
+
     void Update()
     {
         
@@ -32,20 +55,62 @@ public class ThrowProjectile : MonoBehaviour
 
     private void ThrowProjectile1()
     {
-        if (projectilePrefab == null || throwPoint == null)
-        {
-            Debug.LogWarning("ProjectileThrower: Assign 'projectilePrefab' and 'throwPoint' in the Inspector.");
-            return;
-        }
+        if (projectilePrefab == null || throwPoint == null) return;
 
-        // Instantiate a new Rigidbody at the throwPoint’s position & rotation
-        Rigidbody projInstance = Instantiate(
-            projectilePrefab,
-            throwPoint.position,
-            throwPoint.rotation
-        );
+        
+        Rigidbody projInstance = pool.Get();
+        
+        projInstance.transform.position = throwPoint.position;
+        projInstance.transform.rotation = throwPoint.rotation;
 
-        // Immediately give it velocity forward based on throwPoint’s forward vector
+        
+        projInstance.linearVelocity = Vector3.zero;
+         projInstance.angularVelocity = Vector3.zero;
         projInstance.linearVelocity = throwPoint.forward * launchForce;
+
+        
+        StartCoroutine(ReturnAfter(projInstance, 3f));
     }
+    private Rigidbody CreateItem()
+    {
+        Rigidbody proj = Instantiate(projectilePrefab);
+        proj.gameObject.SetActive(false);
+        
+        Projectile projInstance = proj.GetComponent<Projectile>();
+        if (projInstance != null)
+        {
+            projInstance.Initialize(pool);
+        }
+        return proj;
+    }
+
+    
+    private void OnGet(Rigidbody proj)
+    {
+        proj.gameObject.SetActive(true);
+    }
+
+  
+    private void OnRelease(Rigidbody proj)
+    {
+        proj.gameObject.SetActive(false);
+    }
+
+
+    private void OnDestroyItem(Rigidbody proj)
+    {
+        if (proj != null)
+        {
+            Destroy(proj.gameObject);
+        }
+    }
+
+    private IEnumerator ReturnAfter(Rigidbody proj, float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+       
+        pool.Release(proj);
+    }
+
+ 
 }
