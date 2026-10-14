@@ -22,7 +22,7 @@ public class ThrowProjectile : MonoBehaviour
     public float timeBetweenShots = 0.5f;
 
     public CinemachineImpulseSource impulseSource;
-    float fireShakeForce;
+   // float fireShakeForce;
     // Time at which we’re next allowed to shoot
     private float nextTimeToFire = 0f;
 
@@ -45,7 +45,7 @@ public class ThrowProjectile : MonoBehaviour
         if(impulseSource == null)
             impulseSource = GetComponent<CinemachineImpulseSource>();
 
-        fireShakeForce = 0.5f;
+       //fireShakeForce = 0.5f;
     }
 
 
@@ -117,7 +117,7 @@ public class ThrowProjectile : MonoBehaviour
         }
     }
 
-    private void ReturnAfter(Rigidbody proj)
+    public void ReturnAfter(Rigidbody proj)
     {
         pool.Release(proj);
     }

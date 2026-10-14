@@ -8,6 +8,9 @@ public class Tank_Inputs : MonoBehaviour
 
     public Camera camera1;
     public float reticuleSensitivity = 0.5f;
+    
+    
+    public LayerMask terrainLayer;
     public Vector3 reticlePosition;
     public Vector3 ReticlePosition
     {
@@ -82,7 +85,7 @@ public class Tank_Inputs : MonoBehaviour
             Ray screenRay = camera1.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
-            if(Physics.Raycast(screenRay, out hit))
+            if(Physics.Raycast(screenRay, out hit,float.PositiveInfinity,terrainLayer))
             {
                 reticlePosition = hit.point;
                 reticleNormal = hit.normal;
