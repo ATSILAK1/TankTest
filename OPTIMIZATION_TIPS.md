@@ -19,6 +19,10 @@ au Niveau Code :
 
 - Optimisation de la Logique et des Boucles Update : Tous les scripts n’ont pas besoin de s’exécuter 60 ou 100 fois par seconde.
 - Événements plutôt que Update permanent : Si un script doit réagir à un événement tel qu’un dégât subi ou un niveau réussi, utilisation d'un evement reste le meilleur choix
- au niveau assets :
+
+
+au niveau assets :
+
+
 - Utilisation d'asset optimiser avec le minimum de polugone possible
 - reduire l'utilisation de shader et vfx trop gourmand au niveau des ressouces 
