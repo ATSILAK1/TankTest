@@ -157,7 +157,7 @@ public class EnemyTankAI : MonoBehaviour
         Vector3 toPlayer = playerTransform.position - transform.position;
         toPlayer.y = 0f;
         float distance = toPlayer.magnitude;
-        Debug.Log(distance);
+        
 
         // Only shoot when inside minDistance but still inside followRange
         if (distance <= minDistance && distance <= followRange)
@@ -166,6 +166,7 @@ public class EnemyTankAI : MonoBehaviour
             {
                 ThrowProjectile1();
                 nextTimeToFire = Time.time + timeBetweenShots;
+                Debug.Log(gameObject.name +"shooting distance:" + distance);
             }
         }
     }
@@ -189,6 +190,6 @@ public class EnemyTankAI : MonoBehaviour
         );
 
         // Immediately give it velocity forward based on throwPoint's forward vector
-        projInstance.velocity = throwPoint.forward * launchForce;
+        projInstance.linearVelocity = throwPoint.forward * launchForce;
     }
 }
