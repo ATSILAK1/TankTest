@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +7,7 @@ public class Tank_Inputs : MonoBehaviour
 {
 
     public Camera camera1;
-
+    public float reticuleSensitivity = 0.5f;
     public Vector3 reticlePosition;
     public Vector3 ReticlePosition
     {
@@ -30,7 +31,17 @@ public class Tank_Inputs : MonoBehaviour
     {
         get { return rotationInput; }
     }
+
+    private void Start()
+    {
+        reticuleSensitivity = 0.5f; 
+    }
+
+
     // Update is called once per frame
+    
+    
+    
     void Update()
     {
         if(camera1)
@@ -47,16 +58,39 @@ public class Tank_Inputs : MonoBehaviour
 
     protected virtual void HandleInputs()
     {
-        Ray screenRay = camera1.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-
-        if(Physics.Raycast(screenRay, out hit))
-        {
-            reticlePosition = hit.point;
-            reticleNormal = hit.normal;
-        }
-
+        float axisToMoveX= Input.GetAxis("RightStickX");
+        float axisToMoveY = Input.GetAxis("RightStickY");
+        
+        Debug.Log(axisToMoveX+" "+axisToMoveY);
+        
+       
+        
         forwardInput = Input.GetAxis("Vertical");
         rotationInput = Input.GetAxis("Horizontal");
+        if (axisToMoveX != 0 || axisToMoveY != 0)
+        {
+            reticlePosition.x += axisToMoveX * reticuleSensitivity ;
+            reticlePosition.z -= axisToMoveY  * reticuleSensitivity;
+            
+            reticleNormal.x = Mathf.Clamp(reticleNormal.x, -Screen.width , Screen.width);
+            reticleNormal.z = Mathf.Clamp(reticleNormal.z, -Screen.height , Screen.height);
+            return; 
+        }
+
+        if (Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0)
+        {
+            Ray screenRay = camera1.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if(Physics.Raycast(screenRay, out hit))
+            {
+                reticlePosition = hit.point;
+                reticleNormal = hit.normal;
+            }
+
+        }
+        
     }
+
+  
 }

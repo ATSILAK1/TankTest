@@ -21,8 +21,9 @@ public class ThrowProjectile : MonoBehaviour
 
     void Update()
     {
+        
         // On left mouse‐button down, check cooldown
-        if (Input.GetMouseButtonDown(0) && Time.time >= nextTimeToFire)
+        if ((Input.GetMouseButtonDown(0) || Input.GetAxis("RT") > 0) && Time.time >= nextTimeToFire)
         {
             ThrowProjectile1();
             nextTimeToFire = Time.time + timeBetweenShots;

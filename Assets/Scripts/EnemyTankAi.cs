@@ -166,7 +166,7 @@ public class EnemyTankAI : MonoBehaviour
             {
                 ThrowProjectile1();
                 nextTimeToFire = Time.time + timeBetweenShots;
-                Debug.Log(gameObject.name +"shooting distance:" + distance);
+                Debug.Log(gameObject.name +" shooting distance: " + distance);
             }
         }
     }
