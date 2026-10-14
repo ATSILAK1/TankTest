@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -20,11 +21,13 @@ public class ThrowProjectile : MonoBehaviour
     [Tooltip("Minimum time (in seconds) between consecutive shots.")]
     public float timeBetweenShots = 0.5f;
 
+    public CinemachineImpulseSource impulseSource;
+    float fireShakeForce;
     // Time at which we’re next allowed to shoot
     private float nextTimeToFire = 0f;
 
    
-    private ObjectPool<Rigidbody> pool;
+    private static ObjectPool<Rigidbody> pool;
 
 
     private void Awake()
@@ -39,6 +42,10 @@ public class ThrowProjectile : MonoBehaviour
             maxSize: 50
         );
         
+        if(impulseSource == null)
+            impulseSource = GetComponent<CinemachineImpulseSource>();
+
+        fireShakeForce = 0.5f;
     }
 
 
@@ -53,12 +60,12 @@ public class ThrowProjectile : MonoBehaviour
         }
     }
 
-    private void ThrowProjectile1()
+    private  void ThrowProjectile1()
     {
         if (projectilePrefab == null || throwPoint == null) return;
 
         
-        Rigidbody projInstance = pool.Get();
+         Rigidbody projInstance = pool.Get();
         
         projInstance.transform.position = throwPoint.position;
         projInstance.transform.rotation = throwPoint.rotation;
@@ -68,10 +75,15 @@ public class ThrowProjectile : MonoBehaviour
          projInstance.angularVelocity = Vector3.zero;
         projInstance.linearVelocity = throwPoint.forward * launchForce;
 
+        if (impulseSource != null)
+        {
+            
+            impulseSource.GenerateImpulse(100f);
+        }
         
-        StartCoroutine(ReturnAfter(projInstance, 3f));
+       
     }
-    private Rigidbody CreateItem()
+    private  Rigidbody CreateItem()
     {
         Rigidbody proj = Instantiate(projectilePrefab);
         proj.gameObject.SetActive(false);
@@ -105,10 +117,8 @@ public class ThrowProjectile : MonoBehaviour
         }
     }
 
-    private IEnumerator ReturnAfter(Rigidbody proj, float seconds)
+    private void ReturnAfter(Rigidbody proj)
     {
-        yield return new WaitForSeconds(seconds);
-       
         pool.Release(proj);
     }
 

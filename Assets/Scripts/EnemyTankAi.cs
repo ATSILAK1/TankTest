@@ -101,13 +101,13 @@ public class EnemyTankAI : MonoBehaviour
                 Quaternion newRot = Quaternion.RotateTowards(
                     transform.rotation,
                     targetRot,
-                    tankRotationSpeed * Time.deltaTime
+                    tankRotationSpeed * Time.fixedDeltaTime
                 );
                 rb.MoveRotation(newRot);
             }
 
             // Move forward
-            Vector3 forwardMotion = transform.forward * tankSpeed * Time.deltaTime;
+            Vector3 forwardMotion = transform.forward * tankSpeed * Time.fixedDeltaTime;
             rb.MovePosition(transform.position + forwardMotion);
         }
         else
@@ -119,7 +119,7 @@ public class EnemyTankAI : MonoBehaviour
                 Quaternion newRot = Quaternion.RotateTowards(
                     transform.rotation,
                     targetRot,
-                    tankRotationSpeed * Time.deltaTime
+                    tankRotationSpeed * Time.fixedDeltaTime
                 );
                 rb.MoveRotation(newRot);
             }
@@ -142,7 +142,7 @@ public class EnemyTankAI : MonoBehaviour
         finalTurretLookDir = Vector3.Lerp(
             finalTurretLookDir,
             turretDir.normalized,
-            Time.deltaTime * turretLagSpeed
+            Time.fixedDeltaTime * turretLagSpeed
         );
         turretTransform.rotation = Quaternion.LookRotation(finalTurretLookDir);
     }

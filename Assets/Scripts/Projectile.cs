@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -27,6 +28,8 @@ public class Projectile : MonoBehaviour
         {
             Instantiate(impactFX, transform.position, Quaternion.identity);
         }
+        
+        
 
         if (collision.gameObject.CompareTag("PlayerTank"))
         {
